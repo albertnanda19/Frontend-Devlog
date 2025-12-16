@@ -118,7 +118,7 @@ export default function ProjectsList() {
           <h1 className="text-2xl font-semibold tracking-tight">Projects</h1>
         </div>
         <Button asChild>
-          <Link href="/projects/new">
+          <Link href="/projects/add">
             <Plus className="mr-2 size-4" /> New Project
           </Link>
         </Button>
@@ -298,7 +298,7 @@ function EmptyState() {
       </EmptyHeader>
       <EmptyContent>
         <Button asChild>
-          <Link href="/projects/new">
+          <Link href="/projects/add">
             <Plus className="mr-2 size-4" /> New Project
           </Link>
         </Button>

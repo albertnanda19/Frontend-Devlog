@@ -118,34 +118,39 @@ export default function ProjectDetail() {
             <StatusBadge status={project.status} />
           </div>
         </div>
-        {!isArchived && canManage && (
-          <div className="flex items-center gap-2">
-            <Button asChild variant="secondary">
-              <Link href={`/projects/${project.id}/edit`}>Edit</Link>
-            </Button>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="destructive" disabled={deleting}>
-                  {deleting ? "Mengarsipkan..." : "Archive"}
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Arsipkan project?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Tindakan ini tidak dapat dibatalkan. Project akan diarsipkan.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Batal</AlertDialogCancel>
-                  <AlertDialogAction onClick={onArchive} disabled={deleting}>
-                    {deleting ? "Mengarsipkan..." : "Lanjutkan"}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          <Button asChild disabled={isArchived}>
+            <Link href={`/projects/${project.id}/worklogs/new`}>Add Worklog</Link>
+          </Button>
+          {!isArchived && canManage && (
+            <>
+              <Button asChild variant="secondary">
+                <Link href={`/projects/${project.id}/edit`}>Edit</Link>
+              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive" disabled={deleting}>
+                    {deleting ? "Mengarsipkan..." : "Archive"}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Arsipkan project?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Tindakan ini tidak dapat dibatalkan. Project akan diarsipkan.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Batal</AlertDialogCancel>
+                    <AlertDialogAction onClick={onArchive} disabled={deleting}>
+                      {deleting ? "Mengarsipkan..." : "Lanjutkan"}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </>
+          )}
+        </div>
       </div>
 
       <Card>
