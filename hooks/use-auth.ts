@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-// Avoid inline string unions by using enums and constants
 export enum Role {
   ADMIN = "ADMIN",
   USER = "USER",
@@ -35,7 +34,7 @@ export type LoginResult =
       error: string;
     };
 
-const API_HOST = process.env.NEXT_PUBLIC_API_HOST as string;
+export const API_HOST = process.env.NEXT_PUBLIC_API_HOST as string;
 
 const COOKIE = {
   ACCESS_TOKEN: "access_token",
@@ -59,7 +58,10 @@ function setCookie(name: string, value: string, days: number): void {
   }
 }
 
-function parseApiError(status: number, body?: ApiErrorBody | null): string {
+export function parseApiError(
+  status: number,
+  body?: ApiErrorBody | null
+): string {
   if (body?.message) return body.message;
   if (status === 0) return "Tidak dapat terhubung ke server. Coba lagi.";
   if (status >= 500)

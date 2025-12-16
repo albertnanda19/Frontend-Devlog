@@ -62,7 +62,7 @@ const schema = z
 
 type FormValues = z.infer<typeof schema>;
 
-export default function RegisterPage() {
+export default function RegisterForm() {
   const router = useRouter();
   const { registerAccount, isLoading, error, clearError } = useRegister();
   const [status, setStatus] = useState<RegisterStatus>(RegisterStatus.Idle);
@@ -94,7 +94,6 @@ export default function RegisterPage() {
         return;
       }
       setStatus(RegisterStatus.Success);
-      // show success briefly then redirect to login
       setTimeout(() => {
         router.replace(ROUTES.LOGIN);
       }, 1200);
