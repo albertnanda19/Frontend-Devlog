@@ -7,12 +7,42 @@ import { useProjectDetail, ProjectStatus } from "@/hooks/use-project-detail";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 
 function useDebouncedValue<T>(value: T, delay = 400) {
@@ -34,10 +64,11 @@ export default function WorklogsList() {
   const { data: pd } = useProjectDetail(projectId);
   const archived = pd.project?.status === ProjectStatus.ARCHIVED;
 
-  const { data, loading, error, query, setParams, reload, remove } = useWorklogs(projectId, {
-    page: 1,
-    limit: 10,
-  });
+  const { data, loading, error, query, setParams, reload, remove } =
+    useWorklogs(projectId, {
+      page: 1,
+      limit: 10,
+    });
 
   const [fromDate, setFromDate] = useState(query.fromDate || "");
   const [toDate, setToDate] = useState(query.toDate || "");
@@ -48,7 +79,12 @@ export default function WorklogsList() {
   const dAct = useDebouncedValue(activity, 400);
 
   useEffect(() => {
-    setParams({ fromDate: dFrom || undefined, toDate: dTo || undefined, activityType: dAct || undefined, page: 1 });
+    setParams({
+      fromDate: dFrom || undefined,
+      toDate: dTo || undefined,
+      activityType: dAct || undefined,
+      page: 1,
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dFrom, dTo, dAct]);
 
@@ -56,7 +92,12 @@ export default function WorklogsList() {
     setFromDate("");
     setToDate("");
     setActivity("");
-    setParams({ fromDate: undefined, toDate: undefined, activityType: undefined, page: 1 });
+    setParams({
+      fromDate: undefined,
+      toDate: undefined,
+      activityType: undefined,
+      page: 1,
+    });
   }, [setParams]);
 
   const items = useMemo(() => {
@@ -69,8 +110,14 @@ export default function WorklogsList() {
     });
   }, [data?.data]);
 
-  const totalPages = useMemo(() => data?.meta?.totalPages ?? 1, [data?.meta?.totalPages]);
-  const currentPage = useMemo(() => data?.meta?.page ?? query.page ?? 1, [data?.meta?.page, query.page]);
+  const totalPages = useMemo(
+    () => data?.meta?.totalPages ?? 1,
+    [data?.meta?.totalPages]
+  );
+  const currentPage = useMemo(
+    () => data?.meta?.page ?? query.page ?? 1,
+    [data?.meta?.page, query.page]
+  );
 
   const uniqueActivities = useMemo(() => {
     const s = new Set<string>();
@@ -98,7 +145,9 @@ export default function WorklogsList() {
       <div className="flex items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold tracking-tight">Worklogs</h1>
         <Button asChild disabled={archived}>
-          <Link href={`/projects/${projectId}/worklogs/new`}>+ Add Worklog</Link>
+          <Link href={`/projects/${projectId}/worklogs/add`}>
+            + Add Worklog
+          </Link>
         </Button>
       </div>
 
@@ -106,11 +155,19 @@ export default function WorklogsList() {
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-4 sm:gap-3 w-full">
           <div className="flex flex-col gap-1">
             <label className="text-xs text-muted-foreground">From</label>
-            <Input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
+            <Input
+              type="date"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+            />
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-xs text-muted-foreground">To</label>
-            <Input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
+            <Input
+              type="date"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+            />
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-xs text-muted-foreground">Activity</label>
@@ -132,7 +189,11 @@ export default function WorklogsList() {
             </Select>
           </div>
           <div className="flex items-end">
-            <Button variant="secondary" onClick={onResetFilters} className="w-full">
+            <Button
+              variant="secondary"
+              onClick={onResetFilters}
+              className="w-full"
+            >
               Reset
             </Button>
           </div>
@@ -161,8 +222,16 @@ export default function WorklogsList() {
               </TableHeader>
               <TableBody>
                 {items.map((w) => (
-                  <TableRow key={w.id} className="cursor-pointer" onClick={() => router.push(`/projects/${projectId}/worklogs/${w.id}`)}>
-                    <TableCell className="text-sm">{new Date(w.logDate).toLocaleDateString()}</TableCell>
+                  <TableRow
+                    key={w.id}
+                    className="cursor-pointer"
+                    onClick={() =>
+                      router.push(`/projects/${projectId}/worklogs/${w.id}`)
+                    }
+                  >
+                    <TableCell className="text-sm">
+                      {new Date(w.logDate).toLocaleDateString()}
+                    </TableCell>
                     <TableCell className="text-sm">{w.activityType}</TableCell>
                     <TableCell className="text-sm">
                       <div className="line-clamp-1">{w.summary}</div>
@@ -170,33 +239,64 @@ export default function WorklogsList() {
                     <TableCell className="text-sm">
                       <div className="line-clamp-1">{w.blockers || "-"}</div>
                     </TableCell>
-                    <TableCell className="text-right text-sm">{w.timeSpent}</TableCell>
-                    <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
+                    <TableCell className="text-right text-sm">
+                      {w.timeSpent}
+                    </TableCell>
+                    <TableCell
+                      className="text-right"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <div className="flex justify-end gap-2">
-                        <Button asChild variant="ghost" size="icon" aria-label="View">
-                          <Link href={`/projects/${projectId}/worklogs/${w.id}`}>
+                        <Button
+                          asChild
+                          variant="ghost"
+                          size="icon"
+                          aria-label="View"
+                        >
+                          <Link
+                            href={`/projects/${projectId}/worklogs/${w.id}`}
+                          >
                             <Eye className="size-4" />
                           </Link>
                         </Button>
-                        <Button asChild variant="ghost" size="icon" aria-label="Edit">
-                          <Link href={`/projects/${projectId}/worklogs/${w.id}/edit`}>
+                        <Button
+                          asChild
+                          variant="ghost"
+                          size="icon"
+                          aria-label="Edit"
+                        >
+                          <Link
+                            href={`/projects/${projectId}/worklogs/${w.id}/edit`}
+                          >
                             <Pencil className="size-4" />
                           </Link>
                         </Button>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                            <Button variant="ghost" size="icon" aria-label="Delete" disabled={busyId === w.id}>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              aria-label="Delete"
+                              disabled={busyId === w.id}
+                            >
                               <Trash2 className="size-4" />
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>Hapus worklog?</AlertDialogTitle>
-                              <AlertDialogDescription>Tindakan ini tidak dapat dibatalkan.</AlertDialogDescription>
+                              <AlertDialogTitle>
+                                Hapus worklog?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Tindakan ini tidak dapat dibatalkan.
+                              </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Batal</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => onDelete(w.id)} disabled={busyId === w.id}>
+                              <AlertDialogAction
+                                onClick={() => onDelete(w.id)}
+                                disabled={busyId === w.id}
+                              >
                                 {busyId === w.id ? "Menghapus..." : "Hapus"}
                               </AlertDialogAction>
                             </AlertDialogFooter>
@@ -221,7 +321,8 @@ export default function WorklogsList() {
                       href="#"
                       onClick={(e) => {
                         e.preventDefault();
-                        if (currentPage > 1) setParams({ page: (currentPage - 1) as number });
+                        if (currentPage > 1)
+                          setParams({ page: (currentPage - 1) as number });
                       }}
                     />
                   </PaginationItem>
@@ -247,7 +348,8 @@ export default function WorklogsList() {
                       href="#"
                       onClick={(e) => {
                         e.preventDefault();
-                        if (currentPage < totalPages) setParams({ page: (currentPage + 1) as number });
+                        if (currentPage < totalPages)
+                          setParams({ page: (currentPage + 1) as number });
                       }}
                     />
                   </PaginationItem>
@@ -316,17 +418,21 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
   );
 }
 
-function EmptyState({ projectId, archived }: { projectId?: string; archived?: boolean }) {
+function EmptyState({
+  projectId,
+  archived,
+}: {
+  projectId?: string;
+  archived?: boolean;
+}) {
   return (
     <Card>
       <CardContent className="flex items-center justify-between py-8">
         <p className="text-sm text-muted-foreground">Belum ada worklog.</p>
         <Button asChild disabled={archived}>
-          <Link href={`/projects/${projectId}/worklogs/new`}>Add worklog</Link>
+          <Link href={`/projects/${projectId}/worklogs/add`}>Add worklog</Link>
         </Button>
       </CardContent>
     </Card>
   );
 }
-
-
