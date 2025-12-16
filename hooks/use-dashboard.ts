@@ -177,20 +177,27 @@ export function useDashboardData() {
         (w) => new Date(w.logDate) >= weekAgo
       ).length;
 
-      setData({
-        me: meResp?.data ?? null,
-        projects: projResp ?? null,
-        recentWorklogs,
-        totals: {
-          totalProjects,
-          worklogsThisWeek,
-        },
-      });
-    } catch {
+      if (abortRef.current === controller) {
+        setData({
+          me: meResp?.data ?? null,
+          projects: projResp ?? null,
+          recentWorklogs,
+          totals: {
+            totalProjects,
+            worklogsThisWeek,
+          },
+        });
+      }
+    } catch (err) {
+      if (controller.signal.aborted || abortRef.current !== controller) {
+        return;
+      }
       setError("Gagal memuat dashboard. Coba lagi.");
       setData(null);
     } finally {
-      setLoading(false);
+      if (abortRef.current === controller) {
+        setLoading(false);
+      }
     }
   }, [endpoints]);
 

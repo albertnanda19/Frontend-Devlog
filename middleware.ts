@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Cookie keys should match those set on login
 const ACCESS_TOKEN_COOKIE = "access_token";
 const ROLE_COOKIE = "role";
 
@@ -12,8 +11,15 @@ const enum Role {
 export function middleware(req: NextRequest) {
   const { pathname, origin, search } = req.nextUrl;
 
-  // Only guard dashboard and admin route groups; other paths pass through
-  const isDashboard = pathname.startsWith("/dashboard");
+  const dashboardGroupPrefixes = [
+    "/dashboard",
+    "/projects",
+    "/worklogs",
+    "/settings",
+  ];
+  const isDashboard = dashboardGroupPrefixes.some((p) =>
+    pathname.startsWith(p)
+  );
   const isAdmin = pathname.startsWith("/admin");
   if (!isDashboard && !isAdmin) {
     return NextResponse.next();
@@ -24,7 +30,6 @@ export function middleware(req: NextRequest) {
 
   const loginPath = process.env.NEXT_PUBLIC_NO_AUTH_REDIRECT || "/login";
 
-  // If no token, redirect to login (preserve destination via d param)
   if (!token) {
     const dest = encodeURIComponent(pathname + (search || ""));
     const url = new URL(loginPath, origin);
@@ -32,18 +37,14 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Authenticated but enforce role-based access
   if (isDashboard) {
-    // Only USER may access /dashboard
     if (role !== Role.USER) {
-      // If admin, redirect to /admin; otherwise to login
       const url = new URL(role === Role.ADMIN ? "/admin" : loginPath, origin);
       return NextResponse.redirect(url);
     }
   }
 
   if (isAdmin) {
-    // Only ADMIN may access /admin
     if (role !== Role.ADMIN) {
       const url = new URL(
         role === Role.USER ? "/dashboard" : loginPath,
@@ -57,6 +58,11 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  // Limit middleware to only the guarded route groups
-  matcher: ["/dashboard/:path*", "/admin/:path*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/projects/:path*",
+    "/worklogs/:path*",
+    "/settings/:path*",
+    "/admin/:path*",
+  ],
 };
