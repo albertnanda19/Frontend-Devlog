@@ -36,7 +36,7 @@ export type LoginResult =
 
 export const API_HOST = process.env.NEXT_PUBLIC_API_HOST as string;
 
-const COOKIE = {
+export const COOKIE = {
   ACCESS_TOKEN: "access_token",
   REFRESH_TOKEN: "refresh_token",
   ROLE: "role",
