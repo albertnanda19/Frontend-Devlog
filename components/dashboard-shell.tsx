@@ -34,8 +34,6 @@ type Props = {
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/projects", label: "Projects", icon: FolderKanban },
-  { href: "/worklogs", label: "Worklogs", icon: ClipboardList },
-  { href: "/settings", label: "Settings", icon: Settings },
 ] as const;
 
 export default function DashboardShell({ children }: Props) {
